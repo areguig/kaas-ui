@@ -30,6 +30,7 @@ jobs:
       run: |
           git fetch --all
           git checkout --track origin/gh-pages
+          rm -rf node_modules
           find . -mindepth 1 -not -name 'dist' -not -name '.git' -exec rm -rf {} +
           cp dist/* . 
           rm -rf dist

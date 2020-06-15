@@ -28,7 +28,7 @@ jobs:
           
     - name: Install and Build
       run: |
-          git checkout deploy
+          git checkout --track origin/gh-pages
           rm -rf -v !("dist")
           cp dist/* . 
           rm -rf dist

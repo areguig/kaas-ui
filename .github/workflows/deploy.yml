@@ -30,8 +30,7 @@ jobs:
       run: |
           git fetch --all
           git checkout --track origin/gh-pages
-          shopt -s extglob
-          rm -rf -v !("dist")
+          find . ! -name 'dist' -type d -exec rm -rf {} +
           cp dist/* . 
           rm -rf dist
           

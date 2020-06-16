@@ -2,6 +2,11 @@
   <div>
     <section class="section is-size-7">
       <div v-if="error" class="notification is-danger is-light">{{error}}</div>
+      <div v-if="failure" class="notification is-danger is-light">
+        <strong>🐞 line {{failure.line}}</strong>
+        : {{failure.doc_string? failure.doc_string.value : failure.result.error_message}} 🐞
+      </div>
+      <div v-if="passed" class="notification is-success is-light">🏆 All green! Well done 🤘🤘</div>
       <div class="columns">
         <div class="column is-half">
           <label class="label">Feature</label>
@@ -55,7 +60,9 @@ export default {
   name: "Feature",
   data() {
     return {
+      passed: false,
       loading: false,
+      failure: undefined,
       error: "",
       result: "",
       feature: `Feature: testing FOAAS api.
@@ -102,17 +109,31 @@ export default {
   methods: {
     postFeature() {
       this.loading = true;
-      const data = {
+      const body = {
         content: this.feature,
         config: JSON.parse(this.config)
       };
       axios
-        .post(`https://karate-aas.herokuapp.com/feature`, data)
+        .post(`https://karate-aas.herokuapp.com/feature`, body)
         .then(response => {
-          this.result = JSON.stringify(response.data, null, 2);
+          this.error = undefined;
+          const data = response.data;
+          this.result = JSON.stringify(data, null, 2);
+          const failedStep = data.elements
+            .flatMap(o => o.steps)
+            .find(v => v.result.status == "failed");
+          if (failedStep) {
+            this.passed = false;
+            this.failure = failedStep;
+          } else {
+            this.passed = true;
+            this.failure = undefined;
+          }
           this.loading = false;
         })
         .catch(e => {
+          this.passed = false;
+          this.failure = undefined;
           this.error = e;
           this.loading = false;
         });

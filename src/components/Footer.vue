@@ -3,13 +3,12 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>KAAS</strong> by
-          <a href="https://areguig.github.io">Akli Reguig</a>. The source code is licensed
-          <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
-          is licensed
+          <strong>Created with ❤️</strong> by
+          <a href="https://areguig.github.io" target="_blank">Akli Reguig</a>. The source code is licensed
           <a
-            href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
-          >CC BY NC SA 4.0</a>.
+            href="https://github.com/areguig/kaas-ui/blob/master/LICENSE"
+            target="_blank"
+          >MIT</a>.
         </p>
       </div>
     </footer>

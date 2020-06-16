@@ -3,6 +3,7 @@
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
         <img src="android-icon-192x192.png" width="28" height="28" />
+        Karate As A Service
       </a>
 
       <a
@@ -21,7 +22,7 @@
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
         <a class="navbar-item" href="/">Home</a>
-        <a class="navbar-item">Documentation</a>
+        <a class="navbar-item" href="https://intuit.github.io/karate/" target="_blank">Documentation</a>
       </div>
 
       <div class="navbar-end">

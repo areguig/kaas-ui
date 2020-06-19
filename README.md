@@ -1,5 +1,8 @@
 # kaas-ui
 
+The ui behind [KaaS](https://areguig.github.io/kaas-ui)
+
+
 ## Project setup
 ```
 npm install

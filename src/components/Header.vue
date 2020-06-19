@@ -22,7 +22,7 @@
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
         <a class="navbar-item" href="/">Home</a>
-        <a class="navbar-item" href="https://intuit.github.io/karate/" target="_blank">Documentation</a>
+        <a class="navbar-item" href="/kaas-doc" target="_blank">Documentation</a>
       </div>
 
       <div class="navbar-end">

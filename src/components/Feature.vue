@@ -1,12 +1,16 @@
 <template>
   <div>
-    <section class="section is-size-7">
+    <section class="section is-size-6">
       <div v-if="error" class="notification is-danger is-light">{{error}}</div>
       <div v-if="failure" class="notification is-danger is-light">
         <strong>🐞 line {{failure.line}}</strong>
         : {{failure.doc_string? failure.doc_string.value : failure.result.error_message}} 🐞
       </div>
       <div v-if="passed" class="notification is-success is-light">🏆 All green! Well done 🤘🤘</div>
+      <div
+        v-if="!result"
+        class="notification is-info is-light"
+      >🥋🥋 Welcome to the dojo, time for Karate. Run the example to see what happens 🥋🥋</div>
       <div class="columns">
         <div class="column is-half">
           <label class="label">Feature</label>
@@ -69,10 +73,21 @@ export default {
   Background:
     * configure headers = { 'Content-Type': 'application/json', Accept: 'application/json' }
     * url base_url
-  Scenario: should say that this is awesome
+    
+  Scenario: should say that this is awesome from Karate
+    Given path 'awesome/Karate'
     When method get
     Then status 200
     And match response.message == 'This is Fucking Awesome.'
+    And match response.subtitle == '- Karate'
+    * print response
+    
+  Scenario: should say that this is awesome from Kaas
+    Given path 'awesome/Kaas'
+    When method get
+    Then status 200
+    And match response.message == 'This is Fucking Awesome.'
+    And match response.subtitle == '- Kaas'
     * print response`,
       featureOptions: {
         tabSize: 4,
@@ -86,7 +101,7 @@ export default {
         lint: { lintOnChange: false }
       },
       config: `{
- "base_url": "https://foaas.com//awesome/Karate"
+ "base_url": "https://foaas.com/"
 }`,
       jsonOptions: {
         tabSize: 4,
@@ -94,7 +109,6 @@ export default {
         styleActiveLine: true,
         lineNumbers: true,
         line: true,
-        theme: "base16-light",
         mode: "text/javascript"
       }
     };
@@ -111,7 +125,7 @@ export default {
         .then(response => {
           this.error = undefined;
           const data = response.data;
-          this.result = JSON.stringify(data, null, 2);
+          this.result = data;
           const failedStep = data.elements
             .flatMap(o => o.steps)
             .find(v => v.result.status == "failed");
@@ -128,6 +142,7 @@ export default {
           this.passed = false;
           this.failure = undefined;
           this.error = e;
+          this.result = undefined;
           this.loading = false;
         });
     }

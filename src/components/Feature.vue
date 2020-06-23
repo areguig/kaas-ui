@@ -10,20 +10,18 @@
       <div class="columns">
         <div class="column is-half">
           <label class="label">Feature</label>
-          <codemirror v-model="feature" :options="gherkinOptions"></codemirror>
+          <codemirror ref="cmFeature" v-model="feature" :options="featureOptions"></codemirror>
         </div>
         <div class="column is-half">
           <label class="label">Config</label>
-          <codemirror v-model="config" :options="jsonOptions"></codemirror>
+          <codemirror ref="cmJson" v-model="config" :options="jsonOptions"></codemirror>
         </div>
       </div>
       <div class="control">
         <button v-on:click="postFeature" class="button is-success is-rounded">Run</button>
       </div>
     </section>
-    <section class="section is-size-7">
-      <codemirror v-if="result" v-model="result" :options="resultOptions"></codemirror>
-    </section>
+    <FeatureOutput v-if="result" :output="result" />
     <div v-bind:class="loading ? 'is-active loader-wrapper' : 'loader-wrapper'">
       <div class="loader is-loading"></div>
     </div>
@@ -32,6 +30,7 @@
 
 <script>
 import axios from "axios";
+import FeatureOutput from "./FeatureOutput.vue";
 // require styles
 import "codemirror/lib/codemirror.css";
 
@@ -53,11 +52,12 @@ import "codemirror/addon/fold/comment-fold.js";
 import "codemirror/addon/fold/foldcode.js";
 import "codemirror/addon/fold/foldgutter.js";
 import "codemirror/addon/fold/indent-fold.js";
-import "codemirror/addon/fold/markdown-fold.js";
-import "codemirror/addon/fold/xml-fold.js";
 
 export default {
   name: "Feature",
+  components: {
+    FeatureOutput
+  },
   data() {
     return {
       passed: false,
@@ -74,7 +74,7 @@ export default {
     Then status 200
     And match response.message == 'This is Fucking Awesome.'
     * print response`,
-      gherkinOptions: {
+      featureOptions: {
         tabSize: 4,
         foldGutter: true,
         styleActiveLine: true,
@@ -82,7 +82,8 @@ export default {
         line: true,
         theme: "base16-light",
         autofocus: true,
-        mode: "text/x-feature"
+        mode: "text/x-feature",
+        lint: { lintOnChange: false }
       },
       config: `{
  "base_url": "https://foaas.com//awesome/Karate"
@@ -95,14 +96,6 @@ export default {
         line: true,
         theme: "base16-light",
         mode: "text/javascript"
-      },
-      resultOptions: {
-        height: "auto",
-        readOnly: true,
-        foldGutter: true,
-        lineNumbers: true,
-        theme: "paraiso-light",
-        mode: "text/javascript"
       }
     };
   },
@@ -114,7 +107,7 @@ export default {
         config: JSON.parse(this.config)
       };
       axios
-        .post(`https://karate-aas.herokuapp.com/feature`, body)
+        .post(`${process.env.VUE_APP_KAAS_API_BASE}/feature`, body)
         .then(response => {
           this.error = undefined;
           const data = response.data;
